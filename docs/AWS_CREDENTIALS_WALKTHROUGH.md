@@ -46,94 +46,72 @@ This command is useful because it confirms:
 
 ---
 
-## What this error means
+# Common Ways AWS Credentials Are Configured
 
-Example error:
+## Option 1: AWS CLI Profile
 
-```text
-Error when retrieving credentials from custom-process: xyz_dev credentials expired
-```
-
-This means your AWS CLI is configured to use a credential process/profile named something like `xyz_dev`, but the temporary credentials are expired.
-
-The fix is not in Terraform code.
-
-The fix is to refresh or re-authenticate your AWS credentials.
-
----
-
-## Common ways AWS credentials are configured
-
-### Option 1: AWS CLI access keys
-
-Usually used for personal or sandbox AWS accounts.
+A common beginner setup is configuring credentials locally with:
 
 ```bash
 aws configure
 ```
 
-This stores values in:
+This stores credentials in:
 
 ```text
 ~/.aws/credentials
 ~/.aws/config
 ```
 
-### Option 2: AWS SSO
-
-Common in companies.
-
-Typical command:
-
-```bash
-aws sso login --profile <profile-name>
-```
-
-### Option 3: Custom credential process
-
-Some companies use an internal login tool.
-
-The AWS config may contain something like:
-
-```text
-credential_process = some-company-auth-command
-```
-
-If that process says credentials expired, you usually need to rerun the company login/auth command.
+Terraform can then use the active AWS CLI profile automatically.
 
 ---
 
-## How to see which AWS profile you are using
+## Checking the Active AWS Identity
 
-Run:
+To confirm which AWS account and identity are active:
+
+```bash
+aws sts get-caller-identity
+```
+
+This is a useful validation step before running Terraform deployments.
+
+---
+
+## Using a Specific AWS Profile
+
+You can view the active AWS profile with:
 
 ```bash
 echo $AWS_PROFILE
 ```
 
-If it prints something like:
-
-```text
-xyz_dev
-```
-
-then AWS CLI is using that profile.
-
-You can also check:
+You can also temporarily set a profile for Terraform:
 
 ```bash
-aws configure list
+export AWS_PROFILE=personal-terraform
+```
+
+Then verify access:
+
+```bash
+aws sts get-caller-identity
 ```
 
 ---
 
-## How to test a specific profile
+## Common Credential Issues
 
-```bash
-aws sts get-caller-identity --profile xyz_dev
+Example error:
+
+```text
+Error when retrieving credentials: credentials expired
 ```
 
-If it fails, refresh that profile using your company-approved login method.
+This usually means the AWS CLI credentials or session need to be refreshed.
+
+Credential-related issues are often separate from Terraform configuration issues themselves.
 
 ---
 
@@ -155,7 +133,7 @@ This keeps the project isolated, repeatable, and safe to clean up after testing.
 
 ---
 
-## Terraform with a specific AWS profile
+## Terraform with a Specific AWS Profile
 
 If needed, you can update `providers.tf` like this:
 
@@ -178,16 +156,14 @@ variable "aws_profile" {
 And this to `terraform.tfvars`:
 
 ```hcl
-aws_profile = "xyz_dev"
+aws_profile = "personal-terraform"
 ```
 
-However, many company environments prefer using environment variables or pipeline-provided credentials instead of hardcoding a profile in Terraform.
-
-For beginner learning, it is usually fine to rely on whichever AWS profile is already active in your terminal.
+For beginner learning projects, it is also common to rely on whichever AWS profile is already active in the terminal session.
 
 ---
 
-## Common troubleshooting steps
+## Common Troubleshooting Steps
 
 ### 1. Check current identity
 
@@ -209,17 +185,7 @@ aws configure list
 
 ### 4. Refresh credentials
 
-For SSO:
-
-```bash
-aws sso login --profile <profile-name>
-```
-
-For company custom auth:
-
-```bash
-# Run your company-approved AWS login command
-```
+Reconfigure or refresh the AWS CLI profile if credentials have expired.
 
 ### 5. Try again
 
@@ -229,12 +195,8 @@ aws sts get-caller-identity
 
 ---
 
-## Interview explanation
+## Key Takeaway
 
-If asked how Terraform authenticates to AWS:
+Terraform authentication issues are often related to AWS CLI credentials or active profiles rather than Terraform code itself.
 
-> Terraform uses the AWS provider, and the provider uses AWS credentials from the environment, AWS CLI profiles, SSO, or pipeline credentials. Before running Terraform, I usually validate access with aws sts get-caller-identity so I know which account and role I am deploying with.
-
-If asked what happened when credentials expired:
-
-> The Terraform code was not the issue. The AWS CLI credentials had expired, so the provider could not authenticate. The fix is to refresh the AWS profile or credential process, then rerun the Terraform command.
+Validating credentials early helps avoid confusing deployment failures later in the Terraform workflow.
