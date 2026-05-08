@@ -51,10 +51,10 @@ This command is useful because it confirms:
 Example error:
 
 ```text
-Error when retrieving credentials from custom-process: idf_dev credentials expired
+Error when retrieving credentials from custom-process: xyz_dev credentials expired
 ```
 
-This means your AWS CLI is configured to use a credential process/profile named something like `idf_dev`, but the temporary credentials are expired.
+This means your AWS CLI is configured to use a credential process/profile named something like `xyz_dev`, but the temporary credentials are expired.
 
 The fix is not in Terraform code.
 
@@ -114,7 +114,7 @@ echo $AWS_PROFILE
 If it prints something like:
 
 ```text
-idf_dev
+xyz_dev
 ```
 
 then AWS CLI is using that profile.
@@ -130,7 +130,7 @@ aws configure list
 ## How to test a specific profile
 
 ```bash
-aws sts get-caller-identity --profile idf_dev
+aws sts get-caller-identity --profile xyz_dev
 ```
 
 If it fails, refresh that profile using your company-approved login method.
@@ -170,7 +170,7 @@ variable "aws_profile" {
 And this to `terraform.tfvars`:
 
 ```hcl
-aws_profile = "idf_dev"
+aws_profile = "xyz_dev"
 ```
 
 However, many company environments prefer using environment variables or pipeline-provided credentials instead of hardcoding a profile in Terraform.
