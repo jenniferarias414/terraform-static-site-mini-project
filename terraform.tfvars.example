@@ -1,0 +1,4 @@
+aws_region  = "us-east-2"
+project     = "terraform-static-site"
+environment = "dev"
+owner       = "jenny-arias"
