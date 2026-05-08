@@ -137,13 +137,21 @@ If it fails, refresh that profile using your company-approved login method.
 
 ---
 
-## Important: personal project vs company account
+## Account and Credential Safety
 
-For this learning project, it is safest to use a personal sandbox AWS account or an approved company dev/sandbox account.
+This project is intended for a personal sandbox AWS account or another approved learning environment.
 
-Do not deploy experimental resources into a company account unless you are allowed to.
+Avoid deploying learning projects into shared, production, or company-managed AWS accounts unless you have explicit approval.
 
-Also, avoid using broad Administrator permissions in shared/company environments unless that is the approved setup.
+For safety:
+
+- Use a dedicated AWS CLI profile for this project
+- Avoid committing credentials or `terraform.tfvars`
+- Avoid committing Terraform state files
+- Destroy resources after testing
+- Use least-privilege permissions whenever possible
+
+This keeps the project isolated, repeatable, and safe to clean up after testing.
 
 ---
 
