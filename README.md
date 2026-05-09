@@ -198,6 +198,18 @@ This project provisions:
 
 - S3 bucket
 - Website configuration
+
+---
+
+# Future Improvements
+
+Possible future improvements for this project include:
+
+- Adding a CloudFront CDN distribution for faster global delivery
+- Securing the website with HTTPS using an ACM certificate
+- Adding automated CI/CD deployment to apply Terraform on merge
+- Including a staging environment configuration for safe testing
+
 - Bucket policy
 - Website file uploads
 - Public access settings
