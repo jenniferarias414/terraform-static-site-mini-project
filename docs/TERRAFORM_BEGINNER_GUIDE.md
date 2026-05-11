@@ -99,8 +99,6 @@ Companies often already have:
 - environment folders
 - reusable modules
 
-At Southwest / CCP Next, your DevOps team likely provides a repo structure that already includes many files. Your job is usually to update or add resources within that established pattern rather than invent the structure from scratch.
-
 ---
 
 ## 4. Why did I run this command?
@@ -459,16 +457,3 @@ This means:
 
 ---
 
-## 14. Interview explanation
-
-If asked how Terraform projects are structured:
-
-> Terraform projects are usually organized into files like providers.tf, variables.tf, locals.tf, main.tf, and outputs.tf. Terraform reads all .tf files together, so the split is mostly for readability. Providers define what platform Terraform talks to, variables define inputs, locals define reusable calculated values, main.tf usually contains resources or module calls, and outputs print useful deployment values.
-
-If asked if Terraform files are generated:
-
-> Sometimes company repos are generated from templates, but Terraform itself does not require a generated structure. At the simplest level, it is just .tf files in a folder. In company environments, teams usually provide repo patterns and reusable modules so engineers follow established standards.
-
-If asked what you learned from this project:
-
-> This project helped me understand the basic Terraform workflow and how infrastructure code maps to real AWS resources. It also helped me connect the files I see in larger company repos back to simpler Terraform concepts like providers, resources, variables, locals, outputs, and state.
